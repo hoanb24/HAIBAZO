@@ -10,8 +10,16 @@ const HomePage = () => {
   const intervalRef = useRef(null);
 
   const handleInputChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (value < 0) {
+    const value = e.target.value;
+    if (value === "") {
+      Swal.fire({
+        title: "Error",
+        text: "Number of elements cannot be empty.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      setElementCount(0);
+    } else if (parseInt(value, 10) < 0) {
       Swal.fire({
         title: "Error",
         text: "Number of elements cannot be negative.",
@@ -20,7 +28,7 @@ const HomePage = () => {
       });
       setElementCount(0);
     } else {
-      setElementCount(value);
+      setElementCount(parseInt(value, 10));
     }
   };
 
@@ -72,6 +80,16 @@ const HomePage = () => {
   };
 
   const startGame = () => {
+    if (elementCount === 0) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid number of elements to play.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
     setIsPlaying(true);
     setTime(0);
     setCurrentNumber(1);
@@ -104,13 +122,13 @@ const HomePage = () => {
         <input
           type="number"
           placeholder="Enter the number"
-          className="border border-black ml-5"
+          className="border border-black"
           onChange={handleInputChange}
         />
       </div>
       <div className="flex mb-2">
         <p className="text-md">Time:</p>
-        <div className="ml-7">{time}s</div>
+        <div>{time}s</div>
       </div>
       <div className="mb-4">
         <button
